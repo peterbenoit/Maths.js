@@ -15,7 +15,21 @@ Unlike other libraries such as [Math.js](https://github.com/josdejong/mathjs), w
 If your project doesn't require the advanced capabilities provided by comprehensive libraries like **Math.js**, but you still need a more complete set of basic math utilities, then **Maths.js** is a great fit. The methods provided here cover most of the common requirements in everyday development, such as statistical calculations and value transformations.
 
 ## Installation
-To use Maths.js in your project, you can clone or download it directly from GitHub:
+Use npm:
+
+```sh
+npm install @peterbenoit/mathsjs
+```
+
+Then import it in Node/CommonJS:
+
+```javascript
+const Maths = require("@peterbenoit/mathsjs");
+const average = Maths.avg(10, 20, 30);
+console.log(average); // Output: 20
+```
+
+You can also clone or download it directly from GitHub:
 
 1. **Clone the repository**:
    ```sh

@@ -1,0 +1,37 @@
+{
+	"name": "@peterbenoit/mathsjs",
+	"version": "1.0.0",
+	"description": "Lightweight JavaScript math utilities for statistics and common numeric helpers.",
+	"main": "Maths.js",
+	"files": [
+		"Maths.js",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"test": "node --test Maths.test.js",
+		"prepublishOnly": "npm test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/peterbenoit/Maths.js.git"
+	},
+	"keywords": [
+		"math",
+		"statistics",
+		"utility",
+		"median",
+		"mode",
+		"gcd",
+		"lcm"
+	],
+	"author": "Peter Benoit",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/peterbenoit/Maths.js/issues"
+	},
+	"homepage": "https://github.com/peterbenoit/Maths.js#readme",
+	"publishConfig": {
+		"access": "public"
+	}
+}

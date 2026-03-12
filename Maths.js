@@ -1,5 +1,13 @@
 // Maths.js Library
-const Maths = (function () {
+(function (root, factory) {
+	const maths = factory();
+	if (typeof module === "object" && module.exports) {
+		module.exports = maths;
+	}
+	if (root) {
+		root.Maths = maths;
+	}
+})(typeof globalThis !== "undefined" ? globalThis : this, function () {
 	function assertAtLeastOne(values, fnName) {
 		if (values.length === 0) {
 			throw new RangeError(`${fnName} requires at least one numeric value.`);
@@ -172,4 +180,4 @@ const Maths = (function () {
 		percentile,
 		distance
 	};
-})();
+});

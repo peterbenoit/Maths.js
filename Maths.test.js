@@ -1,17 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const vm = require("node:vm");
-
-function loadMaths() {
-	const source = fs.readFileSync("./Maths.js", "utf8") + "\nthis.Maths = Maths;";
-	const context = {};
-	vm.createContext(context);
-	vm.runInContext(source, context);
-	return context.Maths;
-}
-
-const Maths = loadMaths();
+const Maths = require("./Maths.js");
 
 test("sum computes totals", () => {
 	assert.equal(Maths.sum(1, 2, 3, 4), 10);
