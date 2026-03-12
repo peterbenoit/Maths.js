@@ -9,6 +9,9 @@
 		"LICENSE"
 	],
 	"scripts": {
+		"dev": "npm --prefix website run dev",
+		"docs:dev": "npm --prefix website run dev",
+		"docs:build": "npm --prefix website run build",
 		"test": "node --test Maths.test.js",
 		"prepublishOnly": "npm test"
 	},
