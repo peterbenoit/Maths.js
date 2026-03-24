@@ -1,0 +1,25 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Footer.astro';
+---
+
+<Default {...Astro.props}><slot /></Default>
+<div class="pb-footer">
+	Built by <a href="https://peterbenoit.com" target="_blank" rel="noopener noreferrer">Peter Benoit</a>
+</div>
+
+<style>
+	.pb-footer {
+		text-align: center;
+		padding: 0.25rem 1rem 1.25rem;
+		font-size: 0.8rem;
+		color: var(--sl-color-gray-3);
+	}
+	.pb-footer a {
+		color: var(--sl-color-text-accent);
+		text-decoration: none;
+	}
+	.pb-footer a:hover {
+		text-decoration: underline;
+	}
+</style>
