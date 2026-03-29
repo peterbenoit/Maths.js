@@ -1,6 +1,6 @@
 {
 	"name": "@peterbenoit/mathsjs",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Lightweight JavaScript math utilities for statistics and common numeric helpers.",
 	"main": "Maths.js",
 	"files": [
@@ -33,7 +33,7 @@
 	"bugs": {
 		"url": "https://github.com/peterbenoit/Maths.js/issues"
 	},
-	"homepage": "https://github.com/peterbenoit/Maths.js#readme",
+	"homepage": "https://maths-js.vercel.app/",
 	"publishConfig": {
 		"access": "public"
 	}

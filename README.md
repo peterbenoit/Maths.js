@@ -1,204 +1,360 @@
-# Maths.js Documentation
+# Maths.js
 
-## Introduction to Maths.js
+> Lightweight JavaScript math utilities — statistics, number theory, and numeric helpers in under 1 kb.
 
-**Maths.js** is a lightweight JavaScript library that adds a variety of statistical and utility functions. It is designed for developers who need convenient math helpers that are not available in the native `Math` object. The library is focused on simplicity and efficiency, providing frequently needed operations like calculating averages, medians, modes, and more.
+[![npm](https://img.shields.io/npm/v/@peterbenoit/mathsjs)](https://www.npmjs.com/package/@peterbenoit/mathsjs)
+[![license](https://img.shields.io/github/license/peterbenoit/Maths.js)](LICENSE)
+[![tests](https://img.shields.io/badge/tests-passing-brightgreen)](#running-tests)
 
-Unlike other libraries such as [Math.js](https://github.com/josdejong/mathjs), which is very feature-rich and aimed at advanced mathematical operations, **Maths.js** focuses on being lightweight and providing just enough functionality through a standalone `Maths` object without adding unnecessary complexity or overhead. It is ideal for applications that need common mathematical operations without the bloat of a larger library.
+---
 
-### Why use Maths.js?
-- **Lightweight**: Under 1kb compressed. Focuses on the most commonly needed mathematical functions, making it ideal for projects where performance and simplicity are key.
-- **Simple Drop-In Object**: Exposes a standalone `Maths` object with helpers like average, median, factorial, and more.
-- **Simple API**: Provides a straightforward and clean API without the need to learn a complex library structure.
-- **Focused on Essentials**: Offers just enough to cover gaps in the native `Math` object without overwhelming the developer.
+## What is Maths.js?
 
-If your project doesn't require the advanced capabilities provided by comprehensive libraries like **Math.js**, but you still need a more complete set of basic math utilities, then **Maths.js** is a great fit. The methods provided here cover most of the common requirements in everyday development, such as statistical calculations and value transformations.
+**Maths.js** is a small, dependency-free JavaScript library that adds practical statistical and numeric helpers that the native `Math` object doesn't provide. It exposes a single global `Maths` object with clearly named, well-validated methods covering the operations that come up most often in real application work: computing averages, finding medians, calculating greatest common divisors, clamping values, and more.
+
+It works without modification in both browser `<script>` tags and Node.js `require()` environments, with no build step required.
+
+---
+
+## Why I built it
+
+The native `Math` object in JavaScript covers basic operations (rounding, trigonometry, powers) but leaves gaps that nearly every project eventually runs into — things like statistical aggregates, percentile lookups, or integer number theory basics like GCD and LCM. The common workarounds are to either write those helpers inline over and over, or pull in a large library like [math.js](https://github.com/josdejong/mathjs) that brings far more surface area than the project needs.
+
+I built Maths.js to sit comfortably between those two options: small enough to drop into anything (under 1 kb gzipped), but complete enough to cover the methods I kept rewriting. It also enforces input validation consistently — throwing typed errors with clear messages rather than silently returning `NaN`, which makes bugs in data pipelines much easier to spot.
+
+---
+
+## Who it's for
+
+Maths.js is aimed at:
+
+- **Front-end developers** building dashboards, data visualizations, or any UI that needs statistical aggregates without importing a full charting utility's dependency tree.
+- **Node.js developers** writing scripts or APIs that process numeric data — usage analytics, financial calculations, survey results, sensor readings.
+- **Educators and students** who want a readable, self-contained reference implementation of common math algorithms in plain JavaScript.
+- **Anyone who keeps writing `arr.reduce((s, v) => s + v, 0) / arr.length` by hand** and finally wants a stable, tested home for it.
+
+It is _not_ intended for advanced symbolic math, matrix operations, complex numbers, or arbitrary precision arithmetic. For those use cases, [math.js](https://mathjs.org) or similar libraries are better fits.
+
+---
 
 ## Installation
-Use npm:
+
+**npm**
 
 ```sh
 npm install @peterbenoit/mathsjs
 ```
 
-Then import it in Node/CommonJS:
+**Clone / manual**
 
-```javascript
-const Maths = require("@peterbenoit/mathsjs");
-const average = Maths.avg(10, 20, 30);
-console.log(average); // Output: 20
+```sh
+git clone https://github.com/peterbenoit/Maths.js.git
 ```
 
-You can also clone or download it directly from GitHub:
+---
 
-1. **Clone the repository**:
-   ```sh
-   git clone https://github.com/peterbenoit/Maths.js.git
-   ```
+## Usage
 
-2. **Include `Maths.js` in your project** and use the global `Maths` object:
-   ```html
-   <script src="path/to/Maths.js"></script>
-   <script>
-     const average = Maths.avg(10, 20, 30);
-     console.log(average); // Output: 20
-   </script>
-   ```
+### Node.js
 
-## Methods
-
-### Input Validation
-
-Most methods validate inputs and throw helpful errors:
-
-- `TypeError`: Non-numeric inputs, non-finite numbers, or non-integer values where integers are required.
-- `RangeError`: Empty input for methods that require values, invalid bounds, or out-of-range parameters.
-
-### 1. Average (`Maths.avg()`)
-Calculates the **average** of the provided values. This is useful in many scenarios like statistical analysis, getting the center of data, etc.
-
-**Example:**
 ```javascript
-const average = Maths.avg(10, 20, 30);
-console.log(average); // Output: 20
+const Maths = require('@peterbenoit/mathsjs');
+
+console.log(Maths.avg(10, 20, 30));    // 20
+console.log(Maths.median(7, 1, 4));    // 4
+console.log(Maths.gcd(48, 18));        // 6
 ```
 
-### 2. Sum (`Maths.sum()`)
-Returns the **sum** of all provided values. Summation is a basic mathematical operation that's widely useful in calculations, whether it's financial sums or aggregating data.
+### Browser (script tag)
 
-**Example:**
-```javascript
-const total = Maths.sum(10, 20, 30);
-console.log(total); // Output: 60
+```html
+<script src="/path/to/Maths.js"></script>
+<script>
+  console.log(Maths.sum(1, 2, 3));     // 6
+  console.log(Maths.clamp(12, 0, 10)); // 10
+</script>
 ```
 
-### 3. Median (`Maths.median()`)
-Returns the **median** value of the provided set of numbers. The median is particularly useful in understanding central tendency when dealing with skewed data.
+The library attaches to `globalThis.Maths` in browser contexts and exports via `module.exports` in Node. No bundler or build step needed.
 
-**Example:**
+---
+
+## API Reference
+
+All methods live on the `Maths` object. No instantiation required.
+
+### Method overview
+
+| Category | Methods |
+|---|---|
+| Aggregation | `avg`, `sum` |
+| Statistics | `median`, `mode`, `range`, `percentile` |
+| Number theory | `factorial`, `gcd`, `lcm` |
+| Utility | `clamp`, `distance` |
+
+---
+
+### `Maths.avg(...values)` — Arithmetic mean
+
+Returns the average of all provided values.
+
+| | |
+|---|---|
+| **Parameters** | `...values: number[]` — at least one finite number |
+| **Returns** | `number` |
+| **Throws** | `RangeError` if called with no arguments; `TypeError` if any value is not a finite number |
+
 ```javascript
-const med = Maths.median(1, 3, 4, 2);
-console.log(med); // Output: 3 (after sorting: 1, 2, 3, 4)
+Maths.avg(10, 20, 30); // 20
+Maths.avg(1, 2, 3, 4); // 2.5
 ```
 
-### 4. Mode (`Maths.mode()`)
-Returns the **mode**, which is the most frequently occurring value(s) in a dataset. Useful for identifying commonalities in data or analyzing patterns.
+---
 
-**Examples:**
+### `Maths.sum(...values)` — Sum
+
+Returns the total of all provided values.
+
+| | |
+|---|---|
+| **Parameters** | `...values: number[]` |
+| **Returns** | `number` |
+| **Throws** | `TypeError` if any value is not a finite number |
+
 ```javascript
-const modeValue = Maths.mode(1, 2, 2, 3);
-console.log(modeValue); // Output: [2]
-
-const noMode = Maths.mode(1, 1, 2, 2);
-console.log(noMode); // Output: null (no distinct mode)
+Maths.sum(1, 2, 3, 4); // 10
+Maths.sum();            // 0
 ```
 
-### 5. Range (`Maths.range()`)
-Returns the **range** of the provided values. The range helps understand the spread of the dataset by calculating the difference between the maximum and minimum values.
+---
 
-**Example:**
+### `Maths.median(...values)` — Median
+
+Returns the middle value of a sorted dataset. For even-length inputs, returns the mean of the two middle values.
+
+| | |
+|---|---|
+| **Parameters** | `...values: number[]` — at least one finite number |
+| **Returns** | `number` |
+| **Throws** | `RangeError` on empty input; `TypeError` on non-finite values |
+
 ```javascript
-const dataRange = Maths.range(1, 8, 3);
-console.log(dataRange); // Output: 7 (8 - 1)
+Maths.median(1, 3, 2);    // 2
+Maths.median(1, 2, 3, 4); // 2.5
 ```
 
-### 6. Factorial (`Maths.factorial()`)
-Calculates the **factorial** of a number, which is the product of all positive integers up to that number. It is commonly used in permutations, combinations, and probability.
+---
 
-`n` must be a non-negative integer.
+### `Maths.mode(...values)` — Mode
 
-**Example:**
+Returns an array of the most frequently occurring value(s). Returns `null` when all values appear with equal frequency (no distinct mode).
+
+| | |
+|---|---|
+| **Parameters** | `...values: number[]` — at least one finite number |
+| **Returns** | `number[] \| null` |
+| **Throws** | `RangeError` on empty input; `TypeError` on non-finite values |
+
 ```javascript
-const fact = Maths.factorial(5);
-console.log(fact); // Output: 120
+Maths.mode(1, 2, 2, 3);    // [2]
+Maths.mode(1, 1, 2, 3, 3); // [1, 3]
+Maths.mode(1, 2, 3);       // null
 ```
 
-### 7. Greatest Common Divisor (`Maths.gcd()`)
-Returns the **greatest common divisor** of two integers.
+---
 
-**Example:**
+### `Maths.range(...values)` — Range
+
+Returns the difference between the maximum and minimum values.
+
+| | |
+|---|---|
+| **Parameters** | `...values: number[]` — at least one finite number |
+| **Returns** | `number` |
+| **Throws** | `RangeError` on empty input; `TypeError` on non-finite values |
+
 ```javascript
-const divisor = Maths.gcd(48, 18);
-console.log(divisor); // Output: 6
+Maths.range(1, 8, 3); // 7
 ```
 
-### 8. Least Common Multiple (`Maths.lcm()`)
-Returns the **least common multiple** of two integers.
+---
 
-If either input is `0`, the result is `0`.
+### `Maths.factorial(n)` — Factorial
 
-**Example:**
+Returns the product of all positive integers from 1 to `n`. `0!` and `1!` both return `1`.
+
+| | |
+|---|---|
+| **Parameters** | `n: number` — non-negative integer |
+| **Returns** | `number` |
+| **Throws** | `TypeError` if `n` is not an integer; `RangeError` if `n < 0` |
+
 ```javascript
-const multiple = Maths.lcm(4, 6);
-console.log(multiple); // Output: 12
+Maths.factorial(5); // 120
+Maths.factorial(0); // 1
 ```
 
-### 9. Clamp (`Maths.clamp()`)
-Clamps a value between `min` and `max`.
+---
 
-`min` must be less than or equal to `max`.
+### `Maths.gcd(a, b)` — Greatest Common Divisor
 
-**Example:**
+Returns the largest integer that divides both `a` and `b` evenly. Sign is ignored.
+
+| | |
+|---|---|
+| **Parameters** | `a, b: number` — integers |
+| **Returns** | `number` |
+| **Throws** | `TypeError` if either argument is not a finite integer |
+
 ```javascript
-const clamped = Maths.clamp(12, 0, 10);
-console.log(clamped); // Output: 10
+Maths.gcd(48, 18);  // 6
+Maths.gcd(100, 75); // 25
 ```
 
-### 10. Percentile (`Maths.percentile()`)
-Returns the percentile value from an array of numbers.
+---
 
-- `values` must be a non-empty array of finite numbers.
-- `p` must be between `0` and `100` (inclusive).
-- The input array is not mutated.
+### `Maths.lcm(a, b)` — Least Common Multiple
 
-**Example:**
+Returns the smallest positive integer divisible by both `a` and `b`. Returns `0` if either argument is `0`.
+
+| | |
+|---|---|
+| **Parameters** | `a, b: number` — integers |
+| **Returns** | `number` |
+| **Throws** | `TypeError` if either argument is not a finite integer |
+
 ```javascript
-const p90 = Maths.percentile([1, 2, 3, 4, 5], 90);
-console.log(p90); // Output: 5
+Maths.lcm(4, 6); // 12
+Maths.lcm(7, 0); // 0
 ```
 
-### 11. Distance (`Maths.distance()`)
-Returns the Euclidean distance between two 2D points.
+---
 
-**Example:**
+### `Maths.clamp(value, min, max)` — Clamp
+
+Constrains `value` to the range `[min, max]`.
+
+| | |
+|---|---|
+| **Parameters** | `value, min, max: number` — finite numbers; `min ≤ max` |
+| **Returns** | `number` |
+| **Throws** | `TypeError` on non-finite inputs; `RangeError` if `min > max` |
+
 ```javascript
-const d = Maths.distance(0, 0, 3, 4);
-console.log(d); // Output: 5
+Maths.clamp(12, 0, 10);  // 10
+Maths.clamp(-5, 0, 10);  // 0
+Maths.clamp(7, 0, 10);   // 7
 ```
 
-## Future TODOs
+---
 
-Potential next functions to add to Maths.js:
+### `Maths.percentile(values, p)` — Percentile
 
-- `variance(values, options)` - Population/sample variance.
-- `stdDev(values, options)` - Standard deviation built on variance.
-- `quantile(values, q)` - Generalized percentile for quartiles and custom quantiles.
-- `iqr(values)` - Interquartile range (`Q3 - Q1`).
-- `mad(values)` - Median absolute deviation for robust spread analysis.
-- `nCr(n, r)` - Combinations (binomial coefficient).
-- `nPr(n, r)` - Permutations.
-- `roundTo(value, decimals)` - Precision-safe rounding helper.
-- `zScore(value, mean, stdDev)` - Standard score.
-- `normalize(values, options)` - Common normalization strategies (min-max or z-score).
+Returns the value at the `p`th percentile of a dataset. The input array is not mutated.
+
+| | |
+|---|---|
+| **Parameters** | `values: number[]` — non-empty array of finite numbers; `p: number` — 0–100 inclusive |
+| **Returns** | `number` |
+| **Throws** | `TypeError` if `values` is not an array or contains non-finite numbers; `RangeError` if `values` is empty or `p` is out of range |
+
+```javascript
+Maths.percentile([1, 2, 3, 4, 5], 90); // 5
+Maths.percentile([10, 20, 30, 40], 50); // 30
+```
+
+---
+
+### `Maths.distance(x1, y1, x2, y2)` — Euclidean Distance
+
+Returns the straight-line distance between two 2D points.
+
+| | |
+|---|---|
+| **Parameters** | `x1, y1, x2, y2: number` — finite numbers |
+| **Returns** | `number` |
+| **Throws** | `TypeError` on non-finite inputs |
+
+```javascript
+Maths.distance(0, 0, 3, 4); // 5
+Maths.distance(1, 1, 4, 5); // 5
+```
+
+---
+
+## Error handling
+
+Maths.js validates all inputs and throws typed errors with descriptive messages instead of silently returning `NaN` or `undefined`.
+
+| Error type | When it is thrown |
+|---|---|
+| `TypeError` | Non-numeric input, non-finite number, non-integer where integer required, or wrong argument type |
+| `RangeError` | Empty input where values are required, `p` outside `[0, 100]`, `n < 0` for factorial, or `min > max` for clamp |
+
+```javascript
+try {
+  Maths.avg();
+} catch (e) {
+  console.error(e instanceof RangeError, e.message);
+  // true  "avg requires at least one numeric value."
+}
+
+try {
+  Maths.factorial(-1);
+} catch (e) {
+  console.error(e instanceof RangeError, e.message);
+  // true  "n must be a non-negative integer."
+}
+```
+
+---
+
+## Running tests
+
+```sh
+node --test Maths.test.js
+```
+
+Uses Node's built-in `node:test` runner — no additional dependencies required.
+
+---
+
+## Roadmap
+
+Potential additions being considered:
+
+| Method | Description |
+|---|---|
+| `variance(values)` | Population or sample variance |
+| `stdDev(values)` | Standard deviation |
+| `iqr(values)` | Interquartile range (Q3 − Q1) |
+| `mad(values)` | Median absolute deviation |
+| `nCr(n, r)` | Combinations (binomial coefficient) |
+| `nPr(n, r)` | Permutations |
+| `roundTo(value, decimals)` | Precision-safe rounding |
+| `zScore(value, mean, stdDev)` | Standard score |
+| `normalize(values)` | Min-max or z-score normalization |
+
+Suggestions and contributions welcome — open an issue or PR on GitHub.
+
+---
 
 ## Contributing
-Contributions are welcome! If you have suggestions for improvements or new features, please open an issue or submit a pull request on GitHub. Make sure to follow the project's code of conduct.
+
+1. Fork the repository.
+2. Make your changes in a feature branch.
+3. Ensure `node --test Maths.test.js` passes.
+4. Open a pull request with a clear description.
+
+---
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Authors
-- **Peter Benoit** - _Creator of Maths.js library_ - [GitHub Profile](https://github.com/peterbenoit)
+MIT — see [LICENSE](LICENSE).
 
-## Acknowledgments
-- Hat tip to anyone whose code or suggestions were used.
-- Inspiration from existing math libraries like **Math.js**.
+---
 
-## Issues & Support
-If you encounter any problems, please feel free to open an issue on GitHub. We are also open to suggestions for additional features or improvements.
+## Author
 
-## Stay Updated
-To stay updated with new features and releases, please star the repository on GitHub!
-
-Happy coding!
+**Peter Benoit** — [peterbenoit.com](https://peterbenoit.com) · [GitHub](https://github.com/peterbenoit)
 

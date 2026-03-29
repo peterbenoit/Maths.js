@@ -17,6 +17,9 @@ export default defineConfig({
 				{ tag: 'meta', attrs: { name: 'twitter:creator', content: '@peterbenoit' } },
 				{ tag: 'meta', attrs: { name: 'author', content: 'Peter Benoit' } },
 				{ tag: 'meta', attrs: { name: 'keywords', content: 'javascript, math, statistics, utility, average, median, mode, gcd, lcm, clamp, percentile, lightweight' } },
+				// Google Analytics
+				{ tag: 'script', attrs: { src: 'https://www.googletagmanager.com/gtag/js?id=G-GQEC09BG5Z', async: true } },
+				{ tag: 'script', content: "window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-GQEC09BG5Z');" },
 			],
 			components: {
 				Footer: './src/components/Footer.astro',
